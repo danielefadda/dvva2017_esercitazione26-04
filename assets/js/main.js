@@ -34,6 +34,23 @@ var g = gg.append("g")
     .style("fill", "lightgray");
 
 
+// HANDLER
+var attributesHandler = {
+    "birthPlace": {
+        value: "birthPlace",
+        label: "birth place",
+        title:"Artist by country",
+        description:"Number of artists born in each country"
+    },
+    "artworkPlace": {
+        value: "artworkPlace",
+        label: "artwork place",
+        title:"Artwork by country",
+        description:"Number of artwork in each country"
+    }
+};
+
+
 // DATA PREPARATION
 var dsv = d3.dsv(";", "text/plain");
 
