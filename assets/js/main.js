@@ -191,3 +191,39 @@ function updateMapColors(colorScale, valSel) {
     ;
     
 }
+
+// ADD BUTTONS
+// http://getbootstrap.com/components/#btn-groups-single
+// <div class="btn-group" role="group" aria-label="...">
+//   <button type="button" class="btn btn-default">First</button>
+//   <button type="button" class="btn btn-default">Second</button>
+// </div>
+
+var buttonGroup = d3.select("#instructions")
+    .append("div")
+    .attr("id", "buttonGroup")
+    .classed("btn-group", true)
+    .classed("btn-group-xs", true)
+    .attr("role", "group");
+    
+console.log("handler", d3.values(attributesHandler));
+
+buttonGroup.selectAll("button")
+    .data(d3.values(attributesHandler))
+    .enter()
+    .append("button")
+    .attr("type", "button")
+    .classed("btn", true)
+    .classed("btn-default", true)
+    .attr("value", function(d) {
+        return d.value
+    })
+    .text(function(d) {
+        return d.label
+    })
+    .on("click", function() {
+        var val = this.value;
+        console.log("button_val", val);
+        // call functions on click
+        changeMapColor(val);
+    });
