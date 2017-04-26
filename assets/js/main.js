@@ -33,18 +33,33 @@ var g = gg.append("g")
     .attr("class", "map")
     .style("fill", "lightgray");
 
+// COLOR SCALE
+// color scale Birth Place gray
+var birthPlaceColor = d3.scale.quantile()
+    .range(colorbrewer.Oranges[9]);
+// color scale Artwork Place orange
+var artworkPlaceColor = d3.scale.quantile()
+    .range(colorbrewer.Greys[9]);
 
 // HANDLER
 var attributesHandler = {
     "birthPlace": {
         value: "birthPlace",
         label: "birth place",
+         colorScale: birthPlaceColor,
+        valueSelector: function(d) {
+            return birthPlaceColor(birth_place_count[d.properties.CNTR_ID] || 0); // se indefinito assegna ZERO
+        },
         title:"Artist by country",
         description:"Number of artists born in each country"
     },
     "artworkPlace": {
         value: "artworkPlace",
         label: "artwork place",
+        colorScale: artworkPlaceColor,
+        valueSelector: function(d) {
+            return artworkPlaceColor(artwork_place_count[d.properties.CNTR_ID] || 0); // se indefinito assegna ZERO
+        },
         title:"Artwork by country",
         description:"Number of artwork in each country"
     }
@@ -129,5 +144,50 @@ function callback(error, mondo, opere) {
         })
         .attr('class', "stato");
 
+    // SET DOMAINS FOR COLOR SCALES
+    // set domain for birthPlace;
+    birthPlaceColor.domain(d3.values(birth_place_count));
+    // set domain for artworkPlace;
+    artworkPlaceColor.domain(d3.values(artwork_place_count));
 
+    // functions must be called into callback to use data!!!
+    changeMapColor('birthPlace');
+
+
+}
+
+
+//// MAIN FUNCTION TO CONTROL MAP
+function changeMapColor(selection) {
+    console.log('selection', selection);
+    var handler = attributesHandler[selection];
+    updateMapColors(handler.colorScale, handler.valueSelector);
+    
+    //Change Title Map
+    d3.select("#titleMap")
+    .text(handler.title)
+    //Change Map Legend
+    d3.select("#mapDescription")
+    .text(handler.description)
+}
+
+
+function updateMapColors(colorScale, valSel) {
+    svg.selectAll("path.stato")
+        .transition()
+        .duration(1500)
+        .attr("fill", valSel)
+        //added function to handler!!!
+        
+        // EXAMPLE:
+        // colorScale: artworkPlaceColor,
+        // valueSelector: function(d) {
+        //     return artworkPlaceColor(artwork_place_count[d.properties.CNTR_ID] || 0); // se indefinito assegna ZERO
+        // },
+        .attr('opacity', 0.7)
+        .attr('stroke', "black")
+        .attr('stroke-width', 0.2)
+        // .attr('stroke-dasharray',(3,3) )
+    ;
+    
 }
