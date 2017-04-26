@@ -33,6 +33,11 @@ var g = gg.append("g")
     .attr("class", "map")
     .style("fill", "lightgray");
 
+// LEGEND Preparation
+var legendRectSize = 18;
+var legendSpacing = 4;
+
+
 // COLOR SCALE
 // color scale Birth Place gray
 var birthPlaceColor = d3.scale.quantile()
@@ -169,6 +174,9 @@ function changeMapColor(selection) {
     //Change Map Legend
     d3.select("#mapDescription")
     .text(handler.description)
+
+    //Change Legend
+    updateLegend(handler.colorScale);
 }
 
 
@@ -205,7 +213,7 @@ var buttonGroup = d3.select("#instructions")
     .classed("btn-group", true)
     .classed("btn-group-xs", true)
     .attr("role", "group");
-    
+
 console.log("handler", d3.values(attributesHandler));
 
 buttonGroup.selectAll("button")
@@ -227,3 +235,52 @@ buttonGroup.selectAll("button")
         // call functions on click
         changeMapColor(val);
     });
+
+
+// ADD LEGEND SECTION
+function updateLegend(colorScale) {
+
+    d3.select("#legend svg").remove();
+
+    var legend = d3.select("#legend")
+        .append("svg")
+        .attr('height', 180)
+        .selectAll('g')
+        .data(colorScale.range())
+        .enter()
+        .append('g')
+        .attr('class', 'legendEntry');
+
+
+    legend.append('rect')
+        .attr("x", 20) //leave 5 pixel space after the <rect>
+        .attr("y", function(d, i) {
+            return i * 20;
+        })
+        .attr("width", legendRectSize)
+        .attr("height", legendRectSize)
+        .style("stroke", "black")
+        .style("stroke-width", 0.2)
+        .style("fill", function(d) {
+            return d;
+        })
+        .attr("opacity", 0.7);
+
+    legend.append('text')
+        .text(function(d, i) {
+            var extent = colorScale.invertExtent(d);
+            //extent will be a two-element array, format it however you want:
+            var format = d3.format("0f");
+            return format(+extent[0]) + " - " + format(+extent[1]);
+        })
+        .attr("x", 50) //leave 5 pixel space after the <rect>
+        .attr("y", function(d, i) {
+            return i * 20;
+        })
+        .attr("dy", "1.2em") //place text one line *below* the x,y point
+        .attr('fill', "black")
+        // .attr("dy", "0.8em") //place text one line *below* the x,y point
+
+    /// END LEGEND SECTION ///
+
+}
