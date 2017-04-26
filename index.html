@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Master 2017 - Coropleth Map</title>
+    <!-- add css bootstrap, nvd3, custom -->
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="node_modules/nvd3/build/nv.d3.min.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="assets/css/custom.css" type="text/css" media="screen">
+    
+    <!-- add d3 library -->
+    <script src="node_modules/d3/d3.min.js" type="text/javascript" charset="utf-8"></script>
+
+
+    <script src="node_modules/d3-queue/build/d3-queue.js" type="text/javascript" charset="utf-8"></script>
+    <script src="node_modules/colorbrewer/colorbrewer.js" type="text/javascript" charset="utf-8"></script>
+    <script src="node_modules/nvd3/build/nv.d3.min.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body id="index">
+    <div class="container">
+        <div class="row">
+            <div id="title" class="col-xs-12">
+                <h1 id="titleMap">Title</h1></div>
+            <div class="col-xs-9">
+                <div id="viz" class="col-xs-12">
+                </div>
+                <div id="mapDescription" class="col-xs-12">
+                    map description
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-3">
+                <div id="legend" class="col-md-12">
+                <!-- a legend for the map -->
+                </div>
+                <div id="instructions" class="col-md-12">
+                <!-- buttons to switch variables -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/main.js" type="text/javascript" charset="utf-8"></script>
+</body>
+
+</html>

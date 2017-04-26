@@ -1,0 +1,40 @@
+div.tooltip {
+    position: absolute;			
+    text-align: center;			
+    width: 45px;					
+    height: 35px;					
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: white;	
+    border: 1px solid black;		
+    border-radius: 4px;			
+    pointer-events: none;			
+}
+
+h1 {
+    font: 22px sans-serif;
+}
+
+.didascalia {
+    font: 12px sans-serif;
+    padding: 5px;
+    border:1px solid black;
+    margin:20px;
+    height: 45px;
+    width: 130px;
+}
+#legend {
+    font-size: 10px;
+}
+
+#legend svg{
+        border-left: 1px solid black 
+        }
+
+
+#mapDescription {
+    font:14px serif;
+    font-style: italic;
+    margin-bottom : 20px;
+    margin-top : 20px;
+}
