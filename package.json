@@ -1,0 +1,19 @@
+{
+  "name": "dvva2017_esercitazione_0426",
+  "version": "1.0.0",
+  "description": "coropleth map",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "daniele fadda",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "colorbrewer": "^1.0.0",
+    "d3": "^3.5.17",
+    "d3-queue": "^3.0.5",
+    "nvd3": "^1.8.5",
+    "topojson": "^3.0.0"
+  }
+}
