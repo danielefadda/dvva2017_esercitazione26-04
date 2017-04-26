@@ -1,6 +1,37 @@
 var width = 700,
     height = 350;
 
+// MAP Preparation
+var svg = d3.select("#viz")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+// projection
+var projection = d3.geo.mercator()
+    .scale(150)
+    .center([0, 25])
+    .translate([width / 2, height / 2]);
+
+// path transofrmer (from coordinates to path definition)
+var path = d3.geo.path().projection(projection);
+var gg = svg.append("g")
+
+// first child g to contain background
+var sfondo = gg.append("g")
+    .append("rect")
+    .attr("class", "backgroundMap")
+    .attr('width', width)
+    .attr('height', height)
+    .style('fill', "#CEE6ED")
+    //  using patterns:
+    // .style("fill", "url(#whitecarbon)")
+    .style("fill-opacity", 0.2);
+
+// second child g to contain map
+var g = gg.append("g")
+    .attr("class", "map")
+    .style("fill", "lightgray");
 
 
 // DATA PREPARATION
@@ -68,6 +99,18 @@ function callback(error, mondo, opere) {
         .map(opere);
     console.log("artwork_place_count", artwork_place_count);
 
+    // draw basic map
+    path = g.selectAll("path")
+        .data(json.filter(function(d) {
+            return d.properties.CNTR_ID != "AQ" // && d.geometry != null;
+        }))
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr('id', function(d) {
+            return d.properties.CNTR_ID;
+        })
+        .attr('class', "stato");
 
 
 }
