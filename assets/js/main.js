@@ -149,6 +149,7 @@ function callback(error, mondo, opere) {
 
 
 
+
     // draw basic map
     path = g.selectAll("path")
         .data(json.filter(function(d) {
@@ -196,9 +197,9 @@ function setTooltip(selection) {
         })
         .on("click", function(d) {
             console.log("stato cliccato", d.properties.CNTR_ID)
-            //aggiungo il nome stato
+            //aggiungo il nome stato 
             country = d.properties.CNTR_ID
-            d3.select("#colonna1 h3").text(country);
+            d3.select("#colonna1 h4").text("Hai selezionato lo stato: "+ country);
 
             
 
