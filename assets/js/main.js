@@ -46,29 +46,39 @@ var birthPlaceColor = d3.scale.quantile()
 var artworkPlaceColor = d3.scale.quantile()
     .range(colorbrewer.Greys[9]);
 
+birth_place_count = {}
+artwork_place_count = {}
+
 // HANDLER
 var attributesHandler = {
     "birthPlace": {
         value: "birthPlace",
         label: "birth place",
-         colorScale: birthPlaceColor,
+        count: birth_place_count,
+        colorScale: birthPlaceColor,
         valueSelector: function(d) {
             return birthPlaceColor(birth_place_count[d.properties.CNTR_ID] || 0); // se indefinito assegna ZERO
         },
-        title:"Artist by country",
-        description:"Number of artists born in each country"
+        title: "Artist by country",
+        description: "Number of artists born in each country"
     },
     "artworkPlace": {
         value: "artworkPlace",
         label: "artwork place",
+        count: artwork_place_count,
         colorScale: artworkPlaceColor,
         valueSelector: function(d) {
             return artworkPlaceColor(artwork_place_count[d.properties.CNTR_ID] || 0); // se indefinito assegna ZERO
         },
-        title:"Artwork by country",
-        description:"Number of artwork in each country"
+        title: "Artwork by country",
+        description: "Number of artwork in each country"
     }
 };
+
+// Define the div for the tooltip
+var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
 
 // DATA PREPARATION
@@ -123,7 +133,7 @@ function callback(error, mondo, opere) {
             return leaves.length
         })
         .map(opere);
-    console.log("birth_place_count", birth_place_count);
+    attributesHandler["birthPlace"].count = birth_place_count;
 
     // GROUP artwork by ARTWORK MUSEUM PLACE
     artwork_place_count = d3.nest()
@@ -134,7 +144,10 @@ function callback(error, mondo, opere) {
             return leaves.length
         })
         .map(opere);
-    console.log("artwork_place_count", artwork_place_count);
+    attributesHandler["artworkPlace"].count = artwork_place_count;
+
+
+
 
     // draw basic map
     path = g.selectAll("path")
@@ -149,6 +162,7 @@ function callback(error, mondo, opere) {
         })
         .attr('class', "stato");
 
+
     // SET DOMAINS FOR COLOR SCALES
     // set domain for birthPlace;
     birthPlaceColor.domain(d3.values(birth_place_count));
@@ -156,27 +170,59 @@ function callback(error, mondo, opere) {
     artworkPlaceColor.domain(d3.values(artwork_place_count));
 
     // functions must be called into callback to use data!!!
-    changeMapColor('birthPlace');
+    changeMap('birthPlace');
+    setTooltip(birth_place_count);
 
 
 }
 
 
+
+function setTooltip(selection) {
+
+    // TOOLTIP on countries mouseover 
+    path.on("mouseover", function(d) {
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", .8);
+            tooltip.html("<strong>" + d.properties.CNTR_ID + "</strong><br/>" + (selection[d.properties.CNTR_ID] || 0)) //ripartire dal fatto che non prende selection (bischerata)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseout", function(d) {
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0);
+        })
+        .on("click", function(d) {
+            console.log("stato cliccato", d.properties.CNTR_ID)
+            //aggiungo il nome stato
+            country = d.properties.CNTR_ID
+            d3.select("#colonna1 h3").text(country);
+
+            
+
+
+
+        });
+
+}
+
+
 //// MAIN FUNCTION TO CONTROL MAP
-function changeMapColor(selection) {
-    console.log('selection', selection);
+function changeMap(selection) {
     var handler = attributesHandler[selection];
     updateMapColors(handler.colorScale, handler.valueSelector);
-    
+
     //Change Title Map
     d3.select("#titleMap")
-    .text(handler.title)
-    //Change Map Legend
+        .text(handler.title)
+        //Change Map Legend
     d3.select("#mapDescription")
-    .text(handler.description)
-
-    //Change Legend
+        .text(handler.description)
+        //Change Legend
     updateLegend(handler.colorScale);
+    setTooltip(handler.count);
 }
 
 
@@ -186,18 +232,13 @@ function updateMapColors(colorScale, valSel) {
         .duration(1500)
         .attr("fill", valSel)
         //added function to handler!!!
-        
-        // EXAMPLE:
-        // colorScale: artworkPlaceColor,
-        // valueSelector: function(d) {
-        //     return artworkPlaceColor(artwork_place_count[d.properties.CNTR_ID] || 0); // se indefinito assegna ZERO
-        // },
-        .attr('opacity', 0.7)
+
+    .attr('opacity', 0.7)
         .attr('stroke', "black")
         .attr('stroke-width', 0.2)
-        // .attr('stroke-dasharray',(3,3) )
+        //.attr('stroke-dasharray',(3,3) )
     ;
-    
+
 }
 
 // ADD BUTTONS
@@ -233,7 +274,8 @@ buttonGroup.selectAll("button")
         var val = this.value;
         console.log("button_val", val);
         // call functions on click
-        changeMapColor(val);
+        changeMap(val);
+        // setTooltip(attributesHandler[val].count); //CORREGGERE QUI
     });
 
 
