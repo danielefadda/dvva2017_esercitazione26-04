@@ -59,7 +59,7 @@ var attributesHandler = {
         valueSelector: function(d) {
             return birthPlaceColor(birth_place_count[d.properties.CNTR_ID] || 0); // se indefinito assegna ZERO
         },
-        title: "Artist by country",
+        title: "Artists by country",
         description: "Number of artists born in each country"
     },
     "artworkPlace": {
